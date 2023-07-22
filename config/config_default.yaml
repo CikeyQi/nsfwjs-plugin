@@ -10,9 +10,7 @@ notice_user:
   - 3146312184
 warn_text: '啾咪啊！这里有人涩涩啊！{https://c2cpicdw.qpic.cn/offpic_new/3146312184//3146312184-3207407400-FA958C114CE3368AF4DFAF469172761C/0?term=2&is_origin=0}快来人管一管啊！'
 white_user_list: []
-black_user_list: 
-  - 3146312184
+black_user_list: []
 white_group_list: []
-black_group_list:
-  - 755269874
-save_path: /resources/{group_id}/{user_id}/{time}.jpg
+black_group_list: []
+save_path: /picture/{group_id}/{user_id}/{time}.jpg
