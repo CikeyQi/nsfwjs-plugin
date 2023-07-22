@@ -1,7 +1,6 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import axios from 'axios'
 import Config from '../components/config/config.js'
-import Log from '../utils/logs.js'
 import { nsfwjs } from '../components/nsfwjs/nsfwjs.js'
 
 export class Examine extends plugin {
@@ -17,7 +16,7 @@ export class Examine extends plugin {
             rule: [
                 {
                     /** 命令正则匹配 */
-                    reg: '#?审核',
+                    reg: '#?审核$',
                     /** 执行方法 */
                     fnc: 'Examine',
                 }
