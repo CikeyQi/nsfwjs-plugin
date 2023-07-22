@@ -4,34 +4,51 @@ import Config from '../components/config/config.js'
 import Log from '../utils/logs.js'
 import { nsfwjs } from '../components/nsfwjs/nsfwjs.js'
 
-export class Listen extends plugin {
+export class Examine extends plugin {
     constructor() {
         super({
             /** 功能名称 */
-            name: 'NSFWJS-监听',
+            name: 'NSFWJS-审核',
             /** 功能描述 */
-            dsc: 'NSFWJS 监听',
+            dsc: 'NSFWJS 审核',
             event: 'message',
             /** 优先级，数字越小等级越高 */
             priority: 1009,
             rule: [
                 {
                     /** 命令正则匹配 */
-                    reg: '#sadfsdsd',
+                    reg: '#?审核',
                     /** 执行方法 */
-                    fnc: 'Listen',
+                    fnc: 'Examine',
                 }
             ]
         })
     }
 
-    async Listen(e) {
-
+    async Examine(e) {
+        if (e.source) {
+            let reply;
+            if (e.isGroup) {
+                reply = (await e.group.getChatHistory(e.source.seq, 1)).pop()?.message;
+            } else {
+                reply = (await e.friend.getChatHistory(e.source.time, 1)).pop()?.message;
+            }
+            if (reply) {
+                for (let val of reply) {
+                    if (val.type == "image") {
+                        e.img = [val.url];
+                        break;
+                    }
+                }
+            }
+        }
         if (!e.img) {
+            e.reply('未能获取到图片，请指令中携带图片或引用回复图片', true)
             return false
         }
 
-        if (!(await Config.getConfig()).listen.enable) {
+        if (!(await Config.getConfig()).examine.enable) {
+            e.reply('未开启审核功能，请联系机器人管理员开启', true)
             return false
         }
 
@@ -47,8 +64,12 @@ export class Listen extends plugin {
             }
 
             const result = await nsfwjs(pic.data)
-            
-            console.log(result)
+
+            e.reply("该图片的审核结果如下：\n"
+                + `【变态程度】:  ${(result.Hentai * 100).toFixed(2)}%\n`
+                + `【色情程度】:  ${(result.Porn * 100).toFixed(2)}%\n`
+                + `【性感程度】:  ${(result.Sexy * 100).toFixed(2)}%`
+                , true)
         }
 
         return false
