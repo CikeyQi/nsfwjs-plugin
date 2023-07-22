@@ -1,0 +1,24 @@
+{
+  "name": "nsfwjs-plugin",
+  "version": "0.0.1",
+  "description": "Yunzai-Bot的涩图监听插件",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "module": "index.js",
+  "dependencies": {
+    "nsfwjs": "^2.4.2",
+    "@tensorflow/tfjs-node": "^4.9.0",
+    "axios": "^1.4.0"
+  },
+  "keywords": [
+    "Yunzai-Bot",
+    "云崽",
+    "NSFWJS",
+    "涩图监听"
+  ],
+  "author": "@CikeyQi",
+  "license": "ISC"
+}

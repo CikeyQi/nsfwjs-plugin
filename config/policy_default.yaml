@@ -1,0 +1,19 @@
+group:
+  default:
+    localsave: true
+    recall: true
+    warn: false
+    notice: true
+    mute: false
+    mute_time: 60
+  "755269874":
+    localsave: true
+    recall: false
+    warn: false
+    notice: true
+    mute: false
+    mute_time: 60
+private:
+  localsave: true
+  warn: false
+  notice: true
