@@ -107,6 +107,7 @@ export class Listen extends plugin {
                 await doPolicy(e, config, policy, pic, 'Porn', result.Porn)
             }
         }
+        // 放行消息
         return false
     }
 }

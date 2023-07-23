@@ -29,271 +29,368 @@ export class setConfig extends plugin {
   async setConfig (e) {
     // 初始化
     Init.initConfig()
+    // 读取设置
     const config = await Config.getConfig()
-    const set_msg = e.msg.replace(/#?(nsfwjs|NSFWJS)/, '').trim()
-    if (set_msg === "设置监听开启") {
-      config.listen.enable = true
-      Config.setConfig(config)
-      e.reply(`设置成功，当前监听已打开`)
-    } else if (set_msg === "设置监听关闭") {
-      config.listen.enable = false
-      Config.setConfig(config)
-      e.reply(`设置成功，当前监听已关闭`)
-    } else if (set_msg === "设置审核开启") {
-      config.examine.enable = true
-      Config.setConfig(config)
-      e.reply(`设置成功，当前审核已打开`)
-    } else if (set_msg === "设置审核关闭") {
-      config.examine.enable = false
-      Config.setConfig(config)
-      e.reply(`设置成功，当前审核已关闭`)
-    } else if (set_msg.includes("色情阈值")) {
-      const threshold = set_msg.replace(/设置色情阈值/, '').trim()
+
+    // 去除前缀
+    const msg = e.msg.replace(/^#?(nsfwjs|NSFWJS)/, '').trim()
+
+    console.log(msg)
+
+    // 如果是设置监听开启/关闭
+    if (msg.startsWith('设置监听')) {
+      // 如果是开启
+      if (msg.indexOf('开启') !== -1) {
+        config.listen.enable = true
+        await Config.setConfig(config)
+        e.reply('【NSFWJS】监听开启成功，将实时监听图片内容', true)
+        return true
+      }
+
+      // 如果是关闭
+      if (msg.indexOf('关闭') !== -1) {
+        config.listen.enable = false
+        await Config.setConfig(config)
+        e.reply('【NSFWJS】监听关闭成功，将不再监听图片内容', true)
+        return true
+      }
+    }
+
+    // 如果是设置审核开启/关闭
+    if (msg.startsWith('设置审核')) {
+      // 如果是开启
+      if (msg.indexOf('开启') !== -1) {
+        config.examine.enable = true
+        await Config.setConfig(config)
+        e.reply('【NSFWJS】审核开启成功，将对图片进行审核', true)
+        return true
+      }
+
+      // 如果是关闭
+      if (msg.indexOf('关闭') !== -1) {
+        config.examine.enable = false
+        await Config.setConfig(config)
+        e.reply('【NSFWJS】审核关闭成功，将不再对图片进行审核', true)
+        return true
+      }
+    }
+
+    // 如果是设置色情阈值
+    if (msg.indexOf('设置色情阈值') !== -1) {
+      // 获取阈值
+      const threshold = msg.replace(/[^0-9.]/ig, '')
+      // 如果阈值不为空
       if (threshold) {
-        if (isNaN(threshold)) {
-          e.reply(`设置失败，色情阈值必须为数字`)
-          return false
+        // 如果阈值大于等于0且小于等于10
+        if (threshold >= 0 && threshold <= 10) {
+          config.threshold.porn = Number(threshold)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】色情阈值设置成功，当前阈值为${threshold}`, true)
+          return true
+        } else {
+          e.reply('【NSFWJS】色情阈值设置失败，阈值范围为0-10', true)
+          return true
         }
-        config.threshold.porn = Number(threshold)
-        Config.setConfig(config)
-        e.reply(`设置成功，当前色情阈值已设置为${threshold}`)
       } else {
-        e.reply(`设置失败，未能获取到色情阈值`)
+        e.reply('【NSFWJS】色情阈值设置失败，阈值不能为空', true)
+        return true
       }
-    } else if (set_msg.includes("性感阈值")) {
-      const threshold = set_msg.replace(/设置性感阈值/, '').trim()
+    }
+
+    // 如果是设置性感阈值
+    if (msg.indexOf('设置性感阈值') !== -1) {
+      // 获取阈值
+      const threshold = msg.replace(/[^0-9.]/ig, '')
+      // 如果阈值不为空
       if (threshold) {
-        if (isNaN(threshold)) {
-          e.reply(`设置失败，性感阈值必须为数字`)
-          return false
+        // 如果阈值大于等于0且小于等于10
+        if (threshold >= 0 && threshold <= 10) {
+          config.threshold.sexy = Number(threshold)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】性感阈值设置成功，当前阈值为${threshold}`, true)
+          return true
+        } else {
+          e.reply('【NSFWJS】性感阈值设置失败，阈值范围为0-10', true)
+          return true
         }
-        config.threshold.sexy = Number(threshold)
-        Config.setConfig(config)
-        e.reply(`设置成功，当前性感阈值已设置为${threshold}`)
       } else {
-        e.reply(`设置失败，未能获取到性感阈值`)
+        e.reply('【NSFWJS】性感阈值设置失败，阈值不能为空', true)
+        return true
       }
-    } else if (set_msg.includes("变态阈值")) {
-      const threshold = set_msg.replace(/设置变态阈值/, '').trim()
+    }
+
+    // 如果是设置变态阈值
+    if (msg.indexOf('设置变态阈值') !== -1) {
+      // 获取阈值
+      const threshold = msg.replace(/[^0-9.]/ig, '')
+      // 如果阈值不为空
       if (threshold) {
-        if (isNaN(threshold)) {
-          e.reply(`设置失败，变态阈值必须为数字`)
-          return false
+        // 如果阈值大于等于0且小于等于10
+        if (threshold >= 0 && threshold <= 10) {
+          config.threshold.hentai = Number(threshold)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】变态阈值设置成功，当前阈值为${threshold}`, true)
+          return true
+        } else {
+          e.reply('【NSFWJS】变态阈值设置失败，阈值范围为0-10', true)
+          return true
         }
-        config.threshold.hentai = Number(threshold)
-        Config.setConfig(config)
-        e.reply(`设置成功，当前变态阈值已设置为${threshold}`)
       } else {
-        e.reply(`设置失败，未能获取到变态阈值`)
+        e.reply('【NSFWJS】变态阈值设置失败，阈值不能为空', true)
+        return true
       }
-    } else if (set_msg.includes("通知账号")) {
-      let account = set_msg.replace(/添加通知账号/, '').trim()
-      if (account) {
-        if (isNaN(account)) {
-          e.reply(`添加失败，通知账号必须为数字`)
-          return false
+    }
+
+    // 如果是添加/删除通知用户
+    if (msg.startsWith('添加通知用户') || msg.startsWith('删除通知用户')) {
+      // 获取QQ号
+      let qq = msg.replace(/[^0-9]/ig, '')
+      qq = Number(qq)
+      // 如果QQ号不为空
+      if (qq) {
+        // 如果是添加
+        if (msg.startsWith('添加通知用户')) {
+          // 如果用户已存在
+          if (config.notice_user.indexOf(qq) !== -1) {
+            e.reply(`【NSFWJS】添加通知用户失败，用户${qq}已存在`, true)
+            return true
+          }
+          // 添加用户
+          config.notice_user.push(qq)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】添加通知用户成功，用户${qq}已添加`, true)
+          return true
         }
-        account = Number(account)
-        if (config.notice_user.includes(account)) {
-          e.reply(`添加失败，通知账号已存在`)
-          return false
+        // 如果是删除
+        if (msg.startsWith('删除通知用户')) {
+          // 如果用户不存在
+          if (config.notice_user.indexOf(qq) === -1) {
+            e.reply(`【NSFWJS】删除通知用户失败，用户${qq}不存在`, true)
+            return true
+          }
+          // 删除用户
+          config.notice_user.splice(config.notice_user.indexOf(qq), 1)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】删除通知用户成功，用户${qq}已删除`, true)
+          return true
         }
-        config.notice_user.push(account)
-        Config.setConfig(config)
-        e.reply(`添加成功，已将${account}添加到通知账号`)
       } else {
-        e.reply(`添加失败，未能获取到通知账号`)
+        e.reply('【NSFWJS】添加/删除通知用户失败，QQ号不能为空', true)
+        return true
       }
-    } else if (set_msg.includes("删除通知账号")) {
-      let account = set_msg.replace(/删除通知账号/, '').trim()
-      if (account) {
-        if (isNaN(account)) {
-          e.reply(`删除失败，通知账号必须为数字`)
-          return false
-        }
-        account = Number(account)
-        if (!config.notice_user.includes(account)) {
-          e.reply(`删除失败，通知账号不存在`)
-          return false
-        }
-        config.notice_user.splice(config.notice_user.indexOf(account), 1)
-        Config.setConfig(config)
-        e.reply(`删除成功，已将${account}从通知账号中删除`)
-      } else {
-        e.reply(`删除失败，未能获取到通知账号`)
-      }
-    } else if (set_msg.includes("警告文本")) {
-      const text = set_msg.replace(/警告通知文本/, '').trim()
+    }
+
+    // 如果是设置警告文本
+    if (msg.startsWith('设置警告文本')) {
+      // 获取文本
+      const text = msg.replace(/^设置警告文本/, '').trim()
+      // 如果文本不为空
       if (text) {
-        if (text.split('{').length > 2 || text.split('}').length > 2 || text.split('{')[1].split('}')[0].length === 0) {
-          e.reply(`设置失败，警告文本格式错误`)
-          return false
+        // 最多只能有一对{}，且{}内必须有内容
+        if (text.split('{').length > 2 || text.split('}').length > 2 || text.indexOf('{}') !== -1) {
+          e.reply('【NSFWJS】警告文本设置失败，文本格式错误', true)
+          return true
         }
         config.warn_text = text
-        Config.setConfig(config)
-        e.reply(`设置成功，当前警告文本已设置为${text}`)
+        await Config.setConfig(config)
+        e.reply(`【NSFWJS】警告文本设置成功，当前文本为${text}`, true)
+        return true
       } else {
-        e.reply(`设置失败，未能获取到警告文本`)
+        e.reply('【NSFWJS】警告文本设置失败，文本不能为空', true)
+        return true
       }
-    } else if (set_msg.includes("群白名单")) {
-      let group = set_msg.replace(/添加群白名单/, '').trim()
-      if (group) {
-        if (isNaN(group)) {
-          e.reply(`添加失败，群白名单必须为数字`)
-          return false
+    }
+
+    // 如果是添加/删除群白名单
+    if (msg.startsWith('添加群白名单') || msg.startsWith('删除群白名单')) {
+      // 获取群号
+      let group_id = msg.replace(/[^0-9]/ig, '') || e.group_id
+      group_id = Number(group_id)
+      // 如果群号不为空
+      if (group_id) {
+        // 如果是添加
+        if (msg.startsWith('添加群白名单')) {
+          // 如果群已存在
+          if (config.white_group_list.indexOf(group_id) !== -1) {
+            e.reply(`【NSFWJS】添加群白名单失败，群${group_id}已存在`, true)
+            return true
+          }
+          // 添加群
+          config.white_group_list.push(group_id)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】添加群白名单成功，群${group_id}已添加`, true)
+          return true
         }
-        group = Number(group)
-        if (config.white_group_list.includes(group)) {
-          e.reply(`添加失败，群白名单已存在`)
-          return false
+        // 如果是删除
+        if (msg.startsWith('删除群白名单')) {
+          // 如果群不存在
+          if (config.white_group_list.indexOf(group_id) === -1) {
+            e.reply(`【NSFWJS】删除群白名单失败，群${group_id}不存在`, true)
+            return true
+          }
+          // 删除群
+          config.white_group_list.splice(config.white_group_list.indexOf(group_id), 1)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】删除群白名单成功，群${group_id}已删除`, true)
+          return true
         }
-        config.white_group_list.push(group)
-        Config.setConfig(config)
-        e.reply(`添加成功，已将${group}添加到群白名单`)
       } else {
-        e.reply(`添加失败，未能获取到群白名单`)
+        e.reply('【NSFWJS】添加/删除群白名单失败，群号不能为空', true)
+        return true
       }
-    } else if (set_msg.includes("删除群白名单")) {
-      let group = set_msg.replace(/删除群白名单/, '').trim()
-      if (group) {
-        if (isNaN(group)) {
-          e.reply(`删除失败，群白名单必须为数字`)
-          return false
+    }
+
+    // 如果是添加/删除群黑名单
+    if (msg.startsWith('添加群黑名单') || msg.startsWith('删除群黑名单')) {
+      // 获取群号
+      let group_id = msg.replace(/[^0-9]/ig, '') || e.group_id
+      group_id = Number(group_id)
+      // 如果群号不为空
+      if (group_id) {
+        // 如果是添加
+        if (msg.startsWith('添加群黑名单')) {
+          // 如果群已存在
+          if (config.black_group_list.indexOf(group_id) !== -1) {
+            e.reply(`【NSFWJS】添加群黑名单失败，群${group_id}已存在`, true)
+            return true
+          }
+          // 添加群
+          config.black_group_list.push(group_id)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】添加群黑名单成功，群${group_id}已添加`, true)
+          return true
         }
-        group = Number(group)
-        if (!config.white_group_list.includes(group)) {
-          e.reply(`删除失败，群白名单不存在`)
-          return false
+        // 如果是删除
+        if (msg.startsWith('删除群黑名单')) {
+          // 如果群不存在
+          if (config.black_group_list.indexOf(group_id) === -1) {
+            e.reply(`【NSFWJS】删除群黑名单失败，群${group_id}不存在`, true)
+            return true
+          }
+          // 删除群
+          config.black_group_list.splice(config.black_group_list.indexOf(group_id), 1)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】删除群黑名单成功，群${group_id}已删除`, true)
+          return true
         }
-        config.white_group_list.splice(config.white_group_list.indexOf(group), 1)
-        Config.setConfig(config)
-        e.reply(`删除成功，已将${group}从群白名单中删除`)
       } else {
-        e.reply(`删除失败，未能获取到群白名单`)
+        e.reply('【NSFWJS】添加/删除群黑名单失败，群号不能为空', true)
+        return true
       }
-    } else if (set_msg.includes("群黑名单")) {
-      let group = set_msg.replace(/添加群黑名单/, '').trim()
-      if (group) {
-        if (isNaN(group)) {
-          e.reply(`添加失败，群黑名单必须为数字`)
-          return false
+    }
+
+    // 如果是添加/删除用户白名单
+    if (msg.startsWith('添加用户白名单') || msg.startsWith('删除用户白名单')) {
+      // 获取QQ号
+      let qq = msg.replace(/[^0-9]/ig, '')
+      qq = Number(qq)
+      // 如果QQ号不为空
+      if (qq) {
+        // 如果是添加
+        if (msg.startsWith('添加用户白名单')) {
+          // 如果用户已存在
+          if (config.white_user_list.indexOf(qq) !== -1) {
+            e.reply(`【NSFWJS】添加用户白名单失败，用户${qq}已存在`, true)
+            return true
+          }
+          // 添加用户
+          config.white_user_list.push(qq)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】添加用户白名单成功，用户${qq}已添加`, true)
+          return true
         }
-        group = Number(group)
-        if (config.black_group_list.includes(group)) {
-          e.reply(`添加失败，群黑名单已存在`)
-          return false
+        // 如果是删除
+        if (msg.startsWith('删除用户白名单')) {
+          // 如果用户不存在
+          if (config.white_user_list.indexOf(qq) === -1) {
+            e.reply(`【NSFWJS】删除用户白名单失败，用户${qq}不存在`, true)
+            return true
+          }
+          // 删除用户
+          config.white_user_list.splice(config.white_user_list.indexOf(qq), 1)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】删除用户白名单成功，用户${qq}已删除`, true)
+          return true
         }
-        config.black_group_list.push(group)
-        Config.setConfig(config)
-        e.reply(`添加成功，已将${group}添加到群黑名单`)
       } else {
-        e.reply(`添加失败，未能获取到群黑名单`)
+        e.reply('【NSFWJS】添加/删除用户白名单失败，QQ号不能为空', true)
+        return true
       }
-    } else if (set_msg.includes("删除群黑名单")) {
-      let group = set_msg.replace(/删除群黑名单/, '').trim()
-      if (group) {
-        if (isNaN(group)) {
-          e.reply(`删除失败，群黑名单必须为数字`)
-          return false
+    }
+
+    // 如果是添加/删除用户黑名单
+    if (msg.startsWith('添加用户黑名单') || msg.startsWith('删除用户黑名单')) {
+      // 获取QQ号
+      let qq = msg.replace(/[^0-9]/ig, '')
+      qq = Number(qq)
+      // 如果QQ号不为空
+      if (qq) {
+        // 如果是添加
+        if (msg.startsWith('添加用户黑名单')) {
+          // 如果用户已存在
+          if (config.black_user_list.indexOf(qq) !== -1) {
+            e.reply(`【NSFWJS】添加用户黑名单失败，用户${qq}已存在`, true)
+            return true
+          }
+          // 添加用户
+          config.black_user_list.push(qq)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】添加用户黑名单成功，用户${qq}已添加`, true)
+          return true
         }
-        group = Number(group)
-        if (!config.black_group_list.includes(group)) {
-          e.reply(`删除失败，群黑名单不存在`)
-          return false
+        // 如果是删除
+        if (msg.startsWith('删除用户黑名单')) {
+          // 如果用户不存在
+          if (config.black_user_list.indexOf(qq) === -1) {
+            e.reply(`【NSFWJS】删除用户黑名单失败，用户${qq}不存在`, true)
+            return true
+          }
+          // 删除用户
+          config.black_user_list.splice(config.black_user_list.indexOf(qq), 1)
+          await Config.setConfig(config)
+          e.reply(`【NSFWJS】删除用户黑名单成功，用户${qq}已删除`, true)
+          return true
         }
-        config.black_group_list.splice(config.black_group_list.indexOf(group), 1)
-        Config.setConfig(config)
-        e.reply(`删除成功，已将${group}从群黑名单中删除`)
       } else {
-        e.reply(`删除失败，未能获取到群黑名单`)
+        e.reply('【NSFWJS】添加/删除用户黑名单失败，QQ号不能为空', true)
+        return true
       }
-    } else if (set_msg.includes("用户白名单")) {
-      let user = set_msg.replace(/添加用户白名单/, '').trim()
-      if (user) {
-        if (isNaN(user)) {
-          e.reply(`添加失败，用户白名单必须为数字`)
-          return false
-        }
-        user = Number(user)
-        if (config.white_user_list.includes(user)) {
-          e.reply(`添加失败，用户白名单已存在`)
-          return false
-        }
-        config.white_user_list.push(user)
-        Config.setConfig(config)
-        e.reply(`添加成功，已将${user}添加到用户白名单`)
-      } else {
-        e.reply(`添加失败，未能获取到用户白名单`)
-      }
-    } else if (set_msg.includes("删除用户白名单")) {
-      let user = set_msg.replace(/删除用户白名单/, '').trim()
-      if (user) {
-        if (isNaN(user)) {
-          e.reply(`删除失败，用户白名单必须为数字`)
-          return false
-        }
-        user = Number(user)
-        if (!config.white_user_list.includes(user)) {
-          e.reply(`删除失败，用户白名单不存在`)
-          return false
-        }
-        config.white_user_list.splice(config.white_user_list.indexOf(user), 1)
-        Config.setConfig(config)
-        e.reply(`删除成功，已将${user}从用户白名单中删除`)
-      } else {
-        e.reply(`删除失败，未能获取到用户白名单`)
-      }
-    } else if (set_msg.includes("用户黑名单")) {
-      let user = set_msg.replace(/添加用户黑名单/, '').trim()
-      if (user) {
-        if (isNaN(user)) {
-          e.reply(`添加失败，用户黑名单必须为数字`)
-          return false
-        }
-        user = Number(user)
-        if (config.black_user_list.includes(user)) {
-          e.reply(`添加失败，用户黑名单已存在`)
-          return false
-        }
-        config.black_user_list.push(user)
-        Config.setConfig(config)
-        e.reply(`添加成功，已将${user}添加到用户黑名单`)
-      } else {
-        e.reply(`添加失败，未能获取到用户黑名单`)
-      }
-    } else if (set_msg.includes("删除用户黑名单")) {
-      let user = set_msg.replace(/删除用户黑名单/, '').trim()
-      if (user) {
-        if (isNaN(user)) {
-          e.reply(`删除失败，用户黑名单必须为数字`)
-          return false
-        }
-        user = Number(user)
-        if (!config.black_user_list.includes(user)) {
-          e.reply(`删除失败，用户黑名单不存在`)
-          return false
-        }
-        config.black_user_list.splice(config.black_user_list.indexOf(user), 1)
-        Config.setConfig(config)
-        e.reply(`删除成功，已将${user}从用户黑名单中删除`)
-      } else {
-        e.reply(`删除失败，未能获取到用户黑名单`)
-      }
-    } else if (set_msg.includes("存储路径")) {
-      const path = set_msg.replace(/设置存储路径/, '').trim()
+    }
+
+    // 如果是设置保存路径
+    if (msg.startsWith('设置保存路径')) {
+      // 获取路径
+      const path = msg.replace(/^设置保存路径/, '').trim()
+      // 如果路径不为空
       if (path) {
+        // 必须以.jpg或.png结尾
         if (!path.endsWith('.jpg') && !path.endsWith('.png')) {
-          e.reply(`设置失败，存储路径必须以.jpg或.png结尾`)
-          return false
+          e.reply('【NSFWJS】保存路径设置失败，路径必须以.jpg或.png结尾', true)
+          return true
+        }
+        // 必须以/开头
+        if (!path.startsWith('/')) {
+          e.reply('【NSFWJS】保存路径设置失败，路径必须以/开头', true)
+          return true
+        }
+        // .jpg或.png前面必须不是/
+        if (path.indexOf('/.jpg') !== -1 || path.indexOf('/.png') !== -1) {
+          e.reply('【NSFWJS】保存路径设置失败，路径格式错误', true)
+          return true
+        }
+        // 必须包含{time}
+        if (path.indexOf('{time}') === -1) {
+          e.reply('【NSFWJS】保存路径设置失败，路径必须包含{time}，否则会引起文件冲突', true)
+          return true
         }
         config.save_path = path
-        Config.setConfig(config)
-        e.reply(`设置成功，当前存储路径已设置为${path}`)
+        await Config.setConfig(config)
+        e.reply(`【NSFWJS】保存路径设置成功，当前路径为${path}`, true)
+        return true
       } else {
-        e.reply(`设置失败，未能获取到存储路径`)
+        e.reply('【NSFWJS】保存路径设置失败，路径不能为空', true)
+        return true
       }
-    } else {
-      e.reply(`设置失败，未知的设置项`)
     }
   }
 }

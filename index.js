@@ -17,7 +17,7 @@ logger.mark(
   )
 )
 const files = fs
-  .readdirSync('./plugins/nsfw-plugin/apps')
+  .readdirSync('./plugins/nsfwjs-plugin/apps')
   .filter((file) => file.endsWith('.js'))
 let ret = []
 files.forEach((file) => {
