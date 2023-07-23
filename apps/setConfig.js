@@ -1,10 +1,9 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/config/config.js'
-import Log from '../utils/logs.js'
 import Init from '../model/init.js'
 
 export class setConfig extends plugin {
-  constructor () {
+  constructor() {
     super({
       /** 功能名称 */
       name: 'NSFWJS-设置',
@@ -26,7 +25,7 @@ export class setConfig extends plugin {
     })
   }
 
-  async setConfig (e) {
+  async setConfig(e) {
     // 初始化
     Init.initConfig()
     // 读取设置
@@ -392,5 +391,8 @@ export class setConfig extends plugin {
         return true
       }
     }
+    // 如果没有匹配到任何命令
+    e.reply('【NSFWJS】设置失败，命令格式错误', true)
+    return true
   }
 }
