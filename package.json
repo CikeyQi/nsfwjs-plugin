@@ -1,6 +1,6 @@
 {
   "name": "nsfwjs-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Yunzai-Bot的涩图监听插件",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,8 @@
   "module": "index.js",
   "dependencies": {
     "nsfwjs": "^2.4.2",
-    "@tensorflow/tfjs-node": "^4.9.0",
+    "@tensorflow/tfjs-node": "^3.18.0",
+    "@tensorflow/tfjs": "^3.18.0",
     "axios": "^1.4.0"
   },
   "keywords": [

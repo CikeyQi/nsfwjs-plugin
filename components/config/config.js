@@ -77,6 +77,31 @@ class Config {
       return false
     }
   }
+
+  getHistory() {
+    try {
+      const history_data = YAML.parse(
+        fs.readFileSync(`${pluginRoot}/resources/history/history.yaml`, 'utf-8')
+      )
+      return history_data
+    } catch (err) {
+      Log.e('读取history.yaml失败', err)
+      return false
+    }
+  }
+
+  setHistory(history_data) {
+    try {
+      fs.writeFileSync(
+        `${pluginRoot}/resources/history/history.yaml`,
+        YAML.stringify(history_data),
+      )
+      return true
+    } catch (err) {
+      Log.e('写入history.yaml失败', err)
+      return false
+    }
+  }
 }
 
 export default new Config()

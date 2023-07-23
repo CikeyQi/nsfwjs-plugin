@@ -77,6 +77,13 @@ export class Listen extends plugin {
             }
         }
 
+        // 取图片md5，判断是否在白名单中
+        const md5 = e.img[0].split('/')[6].split('-')[2]
+        if ((await Config.getHistory()).white_pic_md5.indexOf(md5) != -1) {
+            Log.i('【NSFWJS】图片已在白名单中，放行')
+            return false
+        }
+
         // 获取所有图片Buffer
         for (const key in e.img) {
             const pic = await axios.get(e.img[0], {
