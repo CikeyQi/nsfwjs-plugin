@@ -28,13 +28,12 @@ export class setConfig extends plugin {
   async setConfig(e) {
     // 初始化
     Init.initConfig()
+
     // 读取设置
     const config = await Config.getConfig()
 
     // 去除前缀
     const msg = e.msg.replace(/^#?(nsfwjs|NSFWJS)/, '').trim()
-
-    console.log(msg)
 
     // 如果是设置监听开启/关闭
     if (msg.startsWith('设置监听')) {

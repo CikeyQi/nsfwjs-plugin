@@ -68,7 +68,7 @@ class Config {
   setPolicy(policy_data) {
     try {
       fs.writeFileSync(
-        `${pluginRoot}/config/policy.yaml`,
+        `${pluginRoot}/config/config/policy.yaml`,
         YAML.stringify(policy_data),
       )
       return true
