@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://ap-plugin.com/"><img src="./resources/readme/nsfwjs_logo.jpg" width="100%" height="100%" alt="mj-plugin"></a>
+  <a href="https://ap-plugin.com/"><img src="./resources/readme/nsfwjs_logo.jpg" width="100%" height="100%" alt="nsfwjs-plugin"></a>
 </p>
 
 <div align="center">
