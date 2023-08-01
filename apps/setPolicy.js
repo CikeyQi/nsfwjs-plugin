@@ -1,5 +1,6 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/config/config.js'
+import { sendSettingPic } from '../components/getsettingpic/sendSettingPic.js'
 import Log from '../utils/logs.js'
 import Init from '../model/init.js'
 
@@ -40,10 +41,13 @@ export class setPolicy extends plugin {
 
     let type = ''
 
+    let isDefault = true
+
     // 如果type_msg为群号，将json路径设置为group.群号
     if (type_msg.match(/^\d+$/)) {
       type_path = `group.${type_msg}`
       type = `群${type_msg}`
+      isDefault = false
       // 判断群号是否存在
       if (!policy.group[type_msg]) {
         // 从默认策略中复制策略
@@ -69,14 +73,16 @@ export class setPolicy extends plugin {
       if (e.group_id) {
         type_path = `group.${e.group_id}`
         type = `群${e.group_id}`
+        isDefault = false
       } else {
         e.reply("【NSFWKJS】请在群聊中使用该命令")
         return true
       }
     }
 
-    // 如果有e.group_id，说明是群聊
-    if (!type_path) {
+    // 如果type_path为空，说明未能识别策略类型
+    if (type_path) {
+      // 如果有e.group_id，说明是群聊
       if (e.group_id) {
         type_path = `group.${e.group_id}`
         type = `群${e.group_id}`
@@ -87,10 +93,7 @@ export class setPolicy extends plugin {
           Config.setPolicy(policy)
         }
       }
-    }
-
-    // 如果type_path为空，说明未能识别策略类型
-    if (!type_path) {
+    } else {
       e.reply("【NSFWJS】未能识别策略类型")
       return true
     }
@@ -184,5 +187,6 @@ export class setPolicy extends plugin {
       Config.setPolicy(policy)
       e.reply(`【NSFWJS】${type}禁言时间设置成功`)
     }
+    return sendSettingPic(e, isDefault)
   }
 }
