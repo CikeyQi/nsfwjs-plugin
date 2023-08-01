@@ -47,7 +47,6 @@ export class setConfig extends plugin {
       if (msg.indexOf('开启') !== -1) {
         config.listen.enable = true
         await Config.setConfig(config)
-        e.reply('【NSFWJS】监听开启成功，将实时监听图片内容', true)
         sendSettingPic(e, true)
         return true
       }
@@ -56,7 +55,6 @@ export class setConfig extends plugin {
       if (msg.indexOf('关闭') !== -1) {
         config.listen.enable = false
         await Config.setConfig(config)
-        e.reply('【NSFWJS】监听关闭成功，将不再监听图片内容', true)
         sendSettingPic(e, true)
         return true
       }
@@ -68,7 +66,6 @@ export class setConfig extends plugin {
       if (msg.indexOf('开启') !== -1) {
         config.examine.enable = true
         await Config.setConfig(config)
-        e.reply('【NSFWJS】审核开启成功，将对图片进行审核', true)
         sendSettingPic(e, true)
         return true
       }
@@ -77,7 +74,6 @@ export class setConfig extends plugin {
       if (msg.indexOf('关闭') !== -1) {
         config.examine.enable = false
         await Config.setConfig(config)
-        e.reply('【NSFWJS】审核关闭成功，将不再对图片进行审核', true)
         sendSettingPic(e, true)
         return true
       }
@@ -93,7 +89,6 @@ export class setConfig extends plugin {
         if (threshold >= 0 && threshold <= 10) {
           config.threshold.porn = Number(threshold)
           await Config.setConfig(config)
-          e.reply(`【NSFWJS】色情阈值设置成功，当前阈值为${threshold}`, true)
           sendSettingPic(e, true)
           return true
         } else {
@@ -116,7 +111,6 @@ export class setConfig extends plugin {
         if (threshold >= 0 && threshold <= 10) {
           config.threshold.sexy = Number(threshold)
           await Config.setConfig(config)
-          e.reply(`【NSFWJS】性感阈值设置成功，当前阈值为${threshold}`, true)
           sendSettingPic(e, true)
           return true
         } else {
@@ -139,7 +133,6 @@ export class setConfig extends plugin {
         if (threshold >= 0 && threshold <= 10) {
           config.threshold.hentai = Number(threshold)
           await Config.setConfig(config)
-          e.reply(`【NSFWJS】变态阈值设置成功，当前阈值为${threshold}`, true)
           sendSettingPic(e, true)
           return true
         } else {

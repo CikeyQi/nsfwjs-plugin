@@ -115,12 +115,10 @@ export class setPolicy extends plugin {
         console.log(value)
         value.localsave = true
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}存本地开启成功`)
       }
       if (msg.indexOf('关闭') != -1) {
         value.localsave = false
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}存本地关闭成功`)
       }
     }
 
@@ -129,12 +127,10 @@ export class setPolicy extends plugin {
       if (msg.indexOf('开启') != -1) {
         value.recall = true
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}撤回开启成功`)
       }
       if (msg.indexOf('关闭') != -1) {
         value.recall = false
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}撤回关闭成功`)
       }
     }
 
@@ -143,12 +139,10 @@ export class setPolicy extends plugin {
       if (msg.indexOf('开启') != -1) {
         value.warn = true
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}警告开启成功`)
       }
       if (msg.indexOf('关闭') != -1) {
         value.warn = false
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}警告关闭成功`)
       }
     }
 
@@ -157,12 +151,10 @@ export class setPolicy extends plugin {
       if (msg.indexOf('开启') != -1) {
         value.notice = true
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}通知开启成功`)
       }
       if (msg.indexOf('关闭') != -1) {
         value.notice = false
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}通知关闭成功`)
       }
     }
 
@@ -171,12 +163,10 @@ export class setPolicy extends plugin {
       if (msg.indexOf('开启') != -1) {
         value.mute = true
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}禁言开启成功`)
       }
       if (msg.indexOf('关闭') != -1) {
         value.mute = false
         Config.setPolicy(policy)
-        e.reply(`【NSFWJS】${type}禁言关闭成功`)
       }
     }
 
@@ -185,7 +175,6 @@ export class setPolicy extends plugin {
       const time = msg.match(/禁言时间(\d+)/)[1]
       value.mute_time = parseInt(time)
       Config.setPolicy(policy)
-      e.reply(`【NSFWJS】${type}禁言时间设置成功`)
     }
     return sendSettingPic(e, isDefault)
   }
