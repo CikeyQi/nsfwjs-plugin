@@ -15,5 +15,6 @@ export async function nsfwjs(Buffer) {
   for (const key in predictions) {
     result[predictions[key].className] = predictions[key].probability
   }
+  tf.dispose([model])
   return result
 }
