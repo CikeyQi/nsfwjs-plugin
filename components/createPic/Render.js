@@ -1,4 +1,7 @@
 import Version from './Version.js'
+import { pluginRoot } from '../../model/path.js'
+import Log from '../../utils/logs.js'
+import fs from 'fs'
 
 function scale(pct = 1) {
     let scale = 100
@@ -15,6 +18,16 @@ const Render = {
         }
 
         let BotName = Version.isMiao ? 'Miao-Yunzai' : 'Yunzai-Bot'
+        let currentVersion = null
+        const package_path = `${pluginRoot}/package.json`
+        try {
+            const package_json = JSON.parse(fs.readFileSync(package_path, 'utf-8'))
+            if (package_json.version) {
+                currentVersion = package_json.version
+            }
+        } catch (err) {
+            Log.e('读取package.json失败', err)
+        }
         return e.runtime.render('nsfwjs-plugin', path, params, {
             retType: cfg.retMsgId ? 'msgId' : 'default',
             beforeRender({ data }) {
@@ -22,7 +35,7 @@ const Render = {
                 if (data.pluginName !== false) {
                     pluginName = ` & ${data.pluginName || 'nsfwjs-plugin'}`
                     if (data.pluginVersion !== false) {
-                        pluginName += `<span class="version">${data.pluginVersion || Version.version}`
+                        pluginName += `<span class="version">${currentVersion}`
                     }
                 }
                 let resPath = data.pluResPath

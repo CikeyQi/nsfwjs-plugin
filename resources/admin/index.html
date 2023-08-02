@@ -19,7 +19,7 @@
       <div class="cfg-line">
         {{cfgItem.title}}
         <span class="cfg-hint">
-          {{if cfgItem.fileName==='nsfwjs-grouppolicy'}} #NSFWJS本群策略{{cfgItem.key}}{{/if}}
+          {{if cfgItem.fileName==='nsfwjs-grouppolicy'}} #NSFWJS(本群|全局)策略{{cfgItem.key}}{{/if}}
           {{if cfgItem.fileName==='nsfwjs-privatepolicy'}} #NSFWJS私聊策略{{cfgItem.key}}{{/if}}
           {{if cfgItem.fileName==='nsfwjs-config'}} #NSFWJS设置{{cfgItem.key}}{{/if}}
           {{if cfgItem.type==='num'}}{{cfgItem.def}}{{else}}开启/关闭{{/if}}
