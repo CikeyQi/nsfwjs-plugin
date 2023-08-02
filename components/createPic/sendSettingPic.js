@@ -98,7 +98,7 @@ export async function sendSettingPic(e, isDefault) {
             }
         },
         nsfwjsConfig: {
-            title: 'nsfwjs设置',
+            title: 'NSFWJS设置',
             cfg: {
                 listen: {
                     title: '违规图片监听开启',
@@ -119,7 +119,7 @@ export async function sendSettingPic(e, isDefault) {
                     key: '色情阈值',
                     type: 'num',
                     def: 0.7,
-                    desc: 'porn设置阈值,范围0-1',
+                    desc: '色情设置阈值,范围0-1',
                     fileName: 'nsfwjs-config'
                 },
                 sexy: {
@@ -127,7 +127,7 @@ export async function sendSettingPic(e, isDefault) {
                     key: '性感阈值',
                     type: 'num',
                     def: 0.7,
-                    desc: 'sexy设置阈值,范围0-1',
+                    desc: '性感设置阈值,范围0-1',
                     fileName: 'nsfwjs-config'
                 },
                 hentai: {
@@ -135,7 +135,7 @@ export async function sendSettingPic(e, isDefault) {
                     key: '变态阈值',
                     type: 'num',
                     def: 0.7,
-                    desc: 'hentai设置阈值,范围0-1',
+                    desc: '变态设置阈值,范围0-1',
                     fileName: 'nsfwjs-config'
                 },
             }

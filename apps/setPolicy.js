@@ -1,6 +1,6 @@
 import plugin from '../../../lib/plugins/plugin.js'
 import Config from '../components/config/config.js'
-import { sendSettingPic } from '../components/getsettingpic/sendSettingPic.js'
+import { sendSettingPic } from '../components/createPic/sendSettingPic.js'
 import Log from '../utils/logs.js'
 import Init from '../model/init.js'
 
