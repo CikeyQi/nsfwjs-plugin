@@ -23,7 +23,7 @@ export class setConfig extends plugin {
           permission: 'master'
         },
         {
-          reg: '^#?(nsfwjs|NSFWJS)查看(本群|默认|全局)(策略|设置|配置)$',
+          reg: '^#?(nsfwjs|NSFWJS)查看(本群|默认|全局|私聊)?(策略|设置|配置)$',
           fnc: 'queSetting',
           permission: 'master'
         }
