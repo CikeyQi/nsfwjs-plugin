@@ -24,7 +24,7 @@ export async function sendSettingPic(e, isDefault) {
     }
     let schema = {
         nsfwjsGroup: {
-            title: isDefault ? '默认群策略' : `当前群${e.group_id}策略`,
+            title: isDefault ? '默认群策略' : `当前群${e.group.name}(${e.group_id})策略`,
             cfg: {
                 localsave: {
                     title: '违规图片保存本地',

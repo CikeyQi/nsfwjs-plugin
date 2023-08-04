@@ -82,10 +82,42 @@ pnpm restart
 
 ## 相关设置
 
+插件安装完成后第一次使用，需配置通知的QQ号，支持配置多个QQ号
+
+对机器人使用命令`#NSFWJS添加通知用户[你的QQ号]`
+
+更多配置项可对机器人发送`#NSFWJS帮助`
+
+查看当前群或默认群配置可对机器人发送`#NSFWJS查看(本群|全局)设置`
 
 <br><br>
 
 ## 功能演示
+
+### 违规图片警告
+
+<p>
+  </a>
+    <img src="./resources/readme/warn.png">
+  </a>
+</p>
+
+### 违规图片通知主人
+
+<p>
+  </a>
+    <img src="./resources/readme/notice.png">
+  </a>
+</p>
+
+### 违规图片保存本地
+默认位置在`./plugins/nsfwjs-plugin/resources/picture/`，可自行配置
+
+<p>
+  </a>
+    <img src="./resources/readme/localsave.png">
+  </a>
+</p>
 
 <br><br>
 
