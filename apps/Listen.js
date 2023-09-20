@@ -20,6 +20,7 @@ export class Listen extends plugin {
                 {
                     /** 命令正则匹配 */
                     reg: '',
+                    log: false,
                     /** 执行方法 */
                     fnc: 'Listen',
                 }
