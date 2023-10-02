@@ -35,7 +35,7 @@ export class setPolicy extends plugin {
     const policy = Config.getPolicy()
 
     // 获取设置和策略之间的内容
-    const type_msg = e.msg.match(/#?(nsfwjs|NSFWJS)(.*)策略(.*)/)[2]
+    const [, , type_msg, msg] = e.msg.match(/#?(nsfwjs|NSFWJS)(.*)策略(.*)/)
 
     let type_path = ''
 
@@ -43,26 +43,14 @@ export class setPolicy extends plugin {
 
     let isDefault = true
 
-    // 如果type_msg为群号，将json路径设置为group.群号
-    if (type_msg.match(/^\d+$/)) {
-      type_path = `group.${type_msg}`
-      type = `群${type_msg}`
-      isDefault = false
-      // 判断群号是否存在
-      if (!policy.group[type_msg]) {
-        // 从默认策略中复制策略
-        policy.group[type_msg] = JSON.parse(JSON.stringify(policy.group.default))
-        Config.setPolicy(policy)
-      }
-    }
 
-    // 如果type_msg为私聊，将json路径设置为private
+    // 如果type_msg为私聊，将yaml路径设置为private
     if (type_msg.match(/私聊/)) {
       type_path = 'private'
       type = '私聊'
     }
 
-    // 如果type_msg为全局，将json路径设置为group.default
+    // 如果type_msg为全局，将yaml路径设置为group.default
     if (type_msg.match(/全局/)) {
       type_path = 'group.default'
       type = '全局'
@@ -74,6 +62,18 @@ export class setPolicy extends plugin {
         type_path = `group.${e.group_id}`
         type = `群${e.group_id}`
         isDefault = false
+        if (!policy.group[e.group_id]) {
+          // 深拷贝全局策略
+          policy.group[e.group_id] = JSON.parse(JSON.stringify(policy.group.default))
+          Config.setPolicy(policy)
+        } else {
+          // 检查群策略键与全局策略键是否一致
+          for (let key in policy.group.default) {
+            if (!policy.group[e.group_id].hasOwnProperty(key)) {
+              policy.group[e.group_id][key] = policy.group.default[key]
+            }
+          }
+        }
       } else {
         e.reply("【NSFWKJS】请在群聊中使用该命令")
         return true
@@ -81,19 +81,7 @@ export class setPolicy extends plugin {
     }
 
     // 如果type_path为空，说明未能识别策略类型
-    if (type_path) {
-      // 如果有e.group_id，说明是群聊
-      if (e.group_id) {
-        type_path = `group.${e.group_id}`
-        type = `群${e.group_id}`
-        // 判断群号是否存在
-        if (!policy.group[e.group_id]) {
-          // 从默认策略中复制策略
-          policy.group[e.group_id] = JSON.parse(JSON.stringify(policy.group.default))
-          Config.setPolicy(policy)
-        }
-      }
-    } else {
+    if (!type_path) {
       e.reply("【NSFWJS】未能识别策略类型")
       return true
     }
@@ -105,14 +93,10 @@ export class setPolicy extends plugin {
       value = value[key]
     }
 
-    const msg = e.msg.match(/#?(nsfwjs|NSFWJS)(.*)策略(.*)/)[3]
-
-    console.log(type, msg)
 
     // 如果是设置存本地
     if (msg.match(/存本地/)) {
       if (msg.indexOf('开启') != -1) {
-        console.log(value)
         value.localsave = true
         Config.setPolicy(policy)
       }
@@ -123,7 +107,7 @@ export class setPolicy extends plugin {
     }
 
     // 如果是设置撤回
-    if (msg.match(/撤回/)) {
+    if (msg.match(/撤回/) && type !== '私聊') {
       if (msg.indexOf('开启') != -1) {
         value.recall = true
         Config.setPolicy(policy)
@@ -159,7 +143,7 @@ export class setPolicy extends plugin {
     }
 
     // 如果是设置禁言
-    if (msg.match(/禁言/)) {
+    if (msg.match(/禁言/) && type !== '私聊') {
       if (msg.indexOf('开启') != -1) {
         value.mute = true
         Config.setPolicy(policy)
@@ -171,11 +155,27 @@ export class setPolicy extends plugin {
     }
 
     // 如果是设置禁言时间
-    if (msg.match(/禁言时间/)) {
+    if (msg.match(/禁言时间/) && type !== '私聊') {
       const time = msg.match(/禁言时间(\d+)/)[1]
+      if (time < 1) {
+        e.reply(`禁言时间不能设置为${time}`, true)
+        return true
+      }
       value.mute_time = parseInt(time)
       Config.setPolicy(policy)
     }
+
+    // 如果是设置违规禁言次数
+    if (msg.match(/限制违规次数/) && type !== '私聊') {
+      const time = msg.match(/限制违规次数(\d+)/)[1]
+      if (time < 1) {
+        e.reply(`限制违规次数不能设置为${time}`, true)
+        return true
+      }
+      value.mutecount = parseInt(time)
+      Config.setPolicy(policy)
+    }
+    
     return sendSettingPic(e, isDefault)
   }
 }

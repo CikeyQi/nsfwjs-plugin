@@ -10,7 +10,15 @@ import Version from './Version.js'
  */
 export async function sendSettingPic(e, isDefault) {
     const policy = Config.getPolicy()
-    let groupPolicy = isDefault || !policy['group'][e.group_id] ? policy['group']['default'] : policy['group'][e.group_id]
+    const groupPolicy = isDefault || !policy['group'][e.group_id] ? policy['group']['default'] : policy['group'][e.group_id]
+    if (!isDefault) {
+        for (let key in policy.group.default) {
+            if (!groupPolicy.hasOwnProperty(key)) {
+                groupPolicy[key] = policy.group.default[key]
+            }
+        }
+    }
+
     const privatePolicy = policy['private']
     const config = Config.getConfig()
     let cfg = {
@@ -67,6 +75,14 @@ export async function sendSettingPic(e, isDefault) {
                     type: 'num',
                     def: 60,
                     desc: '禁言发送违规图片者时间,单位秒',
+                    fileName: 'nsfwjs-grouppolicy'
+                },
+                mutecount: {
+                    title: '限制违规次数',
+                    key: '限制违规次数',
+                    type: 'num',
+                    def: 1,
+                    desc: '达到限制次数禁言并次数归零',
                     fileName: 'nsfwjs-grouppolicy'
                 }
             }
