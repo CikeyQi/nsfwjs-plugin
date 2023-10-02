@@ -35,7 +35,7 @@ export async function doPolicy(e, config, policy, pic, className, probability) {
         for (let i = 0; i < notice_user.length; i++) {
             Bot.pickUser(notice_user[i]).sendMsg([
                 `[NSFWJS]涩图监听`,
-                    (e.group_id ? `\n来自群聊：${e.group_name}(${e.group_id})` : ''),
+                (e.group_id ? `\n来自群聊：${e.group_name}(${e.group_id})` : ''),
                 `\n发送用户：${e.sender.card}(${e.user_id})\n`,
                 `违规类型：${className}(${(probability * 100).toFixed(2)}%)\n`,
                 segment.image(pic.data),
@@ -45,6 +45,14 @@ export async function doPolicy(e, config, policy, pic, className, probability) {
 
     // 判断是否禁言
     if (policy.mute) {
-        e.group.muteMember(e.user_id, policy.mute_time);
+        let count = await redis.get(`nsfwjs:mutecount:${e.group_id}:${e.user_id}`)
+        if (count === null) count = 0
+        count++
+        if (count >= policy.mutecount) {
+            e.group.muteMember(e.user_id, policy.mute_time)
+            await redis.del(`nsfwjs:mutecount:${e.group_id}:${e.user_id}`)
+        } else {
+            await redis.set(`nsfwjs:mutecount:${e.group_id}:${e.user_id}`, count)
+        }
     }
 }

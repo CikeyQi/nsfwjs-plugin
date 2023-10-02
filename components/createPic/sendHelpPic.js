@@ -48,6 +48,11 @@ export async function sendHelpPic(e) {
           "icon": 45,
           "title": "#NSFWJS(本群|全局)策略禁言时间60",
           "desc": "禁言发送违规图片者时间,单位秒"
+        },
+        {
+          "icon": 10,
+          "title": "#NSFWJS(本群|全局)策略限制违规次数1",
+          "desc": "达到限制次数禁言并次数归零"
         }
       ]
     },
