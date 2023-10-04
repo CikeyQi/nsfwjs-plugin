@@ -47,19 +47,19 @@ class Init {
       fs.copyFileSync(policy_default_yaml, policy_yaml)
     }
     // 同步default策略文件中全局键与策略文件全局键
-    const policy_default_data = Config.getDefPolicy().group.default
-    const policy_data = Config.getPolicy().group.default
-    for (const key in policy_default_data) {
-      if (!(key in config_data)) {
-        policy_data[key] = policy_default_data[key]
+    const policy_default_data = Config.getDefPolicy()
+    const policy_data = Config.getPolicy()
+    for (const key in policy_default_data.group.default) {
+      if (!(key in policy_data.group.default)) {
+        policy_data.group.default[key] = policy_default_data.group.default[key]
       }
     }
-    for (const key in config_data) {
-      if (!(key in config_default_data)) {
-        delete config_data[key]
+    for (const key in policy_data.group.default) {
+      if (!(key in policy_default_data.group.default)) {
+        delete policy_data.group.default[key]
       }
     }
-    Config.setPolicy(config_data)
+    Config.setPolicy(policy_data)
   }
 }
 
