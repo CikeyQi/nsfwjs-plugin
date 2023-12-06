@@ -52,7 +52,7 @@ cd Yunzai-Bot
 - 使用 Gitee（国内服务器推荐使用此方法）
 
 ```
-git clone https://gitee.com/CikeyQi/nsfwjs-plugin.git ./plugins/nsfwjs-plugin
+git clone https://mirror.ghproxy.com/https://github.com/CikeyQi/nsfwjs-plugin.git ./plugins/nsfwjs-plugin
 ```
 
 - 使用 Github
