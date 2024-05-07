@@ -1,5 +1,6 @@
 import nsfw from 'nsfwjs'
 import tf from '@tensorflow/tfjs-node'
+import { pluginResources } from '../../model/path.js'
 
 /**
  * 通过图片Buffer判断是否为色情图片
@@ -7,7 +8,7 @@ import tf from '@tensorflow/tfjs-node'
  * @returns 
  */
 export async function nsfwjs(Buffer) {
-  const model = await nsfw.load()
+  const model = await nsfw.load('file://' + pluginResources + '/models/mobilenet_v2')
   const image = await tf.node.decodeImage(Buffer, 3)
   const predictions = await model.classify(image)
   image.dispose()
