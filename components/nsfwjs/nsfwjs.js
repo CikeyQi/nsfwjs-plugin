@@ -8,7 +8,7 @@ import { pluginResources } from '../../model/path.js'
  * @returns 
  */
 export async function nsfwjs(Buffer) {
-  const model = await nsfw.load('file://' + pluginResources + '/models/mobilenet_v2')
+  const model = await nsfw.load('file://' + pluginResources + '/models/mobilenet_v2/')
   const image = await tf.node.decodeImage(Buffer, 3)
   const predictions = await model.classify(image)
   image.dispose()

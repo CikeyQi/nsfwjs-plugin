@@ -20,7 +20,7 @@ export class update extends plugin {
       priority: 1009,
       rule: [
         {
-          reg: '^#?(nsfwjs|NSFWJS)更新$',
+          reg: '^#?(nsfwjs|NSFWJS)((插件)?(强制)?更新| update)$',
           fnc: 'update'
         }
       ]
