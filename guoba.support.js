@@ -7,18 +7,19 @@ export function supportGuoba() {
   return {
     pluginInfo: {
       name: 'nsfwjs-plugin',
-      title: 'nsfwjs-plugin',
+      title: '色图监听插件',
       author: ['@CikeyQi', '@erzaozi'],
       authorLink: ['https://github.com/CikeyQi', 'https://github.com/erzaozi'],
       link: 'https://github.com/CikeyQi/nsfwjs-plugin',
       isV3: true,
       isV2: false,
-      description: '基于Yunzai-Bot的涩图监听插件，使用NSFWJS',
+      showInMenu: true,
+      description: '基于 Yunzai 的涩图监听插件，使用 NSFWJS 模型',
       // 显示图标，此为个性化配置
       // 图标可在 https://icon-sets.iconify.design 这里进行搜索
-      icon: 'mdi:stove',
+      icon: 'openmoji:stop-sign',
       // 图标颜色，例：#FF0000 或 rgb(255, 0, 0)
-      iconColor: '#d19f56',
+      iconColor: '#dc143c',
       // 如果想要显示成图片，也可以填写图标路径（绝对路径）
       iconPath: path.join(pluginRoot, 'resources/readme/girl.png'),
     },
