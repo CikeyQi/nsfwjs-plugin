@@ -236,11 +236,11 @@ export function supportGuoba() {
           lodash.set(config, keyPath, value)
         }
         config = lodash.merge({}, Config.getConfig(), config)
-        config.notice_user = data['notice_user']
-        config.white_user_list = data['white_user_list']
-        config.black_user_list = data['black_user_list']
-        config.white_group_list = data['white_group_list']
-        config.black_group_list = data['black_group_list']
+        config.notice_user = data['notice_user'].map(ele => isNaN(ele) ? ele : Number(ele))
+        config.white_user_list = data['white_user_list'].map(ele => isNaN(ele) ? ele : Number(ele))
+        config.black_user_list = data['black_user_list'].map(ele => isNaN(ele) ? ele : Number(ele))
+        config.white_group_list = data['white_group_list'].map(ele => isNaN(ele) ? ele : Number(ele))
+        config.black_group_list = data['black_group_list'].map(ele => isNaN(ele) ? ele : Number(ele))
         Config.setConfig(config)
         return Result.ok({}, '保存成功~')
       },
