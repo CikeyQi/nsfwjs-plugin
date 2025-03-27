@@ -12,7 +12,7 @@
     "nsfwjs": "2.4.2",
     "@tensorflow/tfjs-node": "3.18.0",
     "@tensorflow/tfjs": "3.18.0",
-    "axios": "1.4.0"
+    "axios": "1.8.2"
   },
   "keywords": [
     "Yunzai-Bot",
