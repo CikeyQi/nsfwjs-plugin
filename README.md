@@ -15,9 +15,6 @@
 
 ## 安装插件
 
-> [!WARNING]
-> 使用 Windows 系统需要编译安装，需要安装 [C++](https://visualstudio.microsoft.com/zh-hans/vs/) 库和 [Python](https://www.python.org/) 库，非常的麻烦，Windows 用户且嫌麻烦的可以不要往下看了
-
 #### 1. 克隆仓库
 
 ```
@@ -36,6 +33,10 @@ git clone https://github.com/CikeyQi/nsfwjs-plugin.git ./plugins/nsfwjs-plugin
 ```
 pnpm install --filter=nsfwjs-plugin
 ```
+
+> [!WARNING]
+> 使用 Windows 系统需要编译安装，需要安装 [C++](https://visualstudio.microsoft.com/zh-hans/vs/) 库和 [Python](https://www.python.org/) 库，非常的麻烦，Windows 用户且嫌麻烦的可以不要往下看了
+> 由于 `pnpm v10` 默认禁用依赖项的生命周期脚本执行，请安装依赖后使用 `pnpm approve-builds` 命令进行构建
 
 ## 功能列表
 
