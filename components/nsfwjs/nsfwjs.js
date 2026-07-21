@@ -1,4 +1,4 @@
-import nsfw from 'nsfwjs'
+import * as nsfw from 'nsfwjs'
 import * as tf from '@tensorflow/tfjs'
 import { setWasmPaths } from '@tensorflow/tfjs-backend-wasm'
 import sharp from 'sharp'
