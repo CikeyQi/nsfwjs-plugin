@@ -1,9 +1,32 @@
 import Config from "./components/config/config.js";
 import lodash from "lodash";
 import path from "path";
+import fs from "fs";
 import { pluginRoot } from "./model/path.js";
 
 export function supportGuoba() {
+  // 获取所有可用的模型目录
+  const modelsDir = path.join(pluginRoot, 'resources/models');
+  let availableModels = [];
+  try {
+    if (fs.existsSync(modelsDir)) {
+      availableModels = fs.readdirSync(modelsDir).filter(file => {
+        const stat = fs.statSync(path.join(modelsDir, file));
+        return stat.isDirectory();
+      }).map(model => ({
+        label: model,
+        value: model
+      }));
+    }
+  } catch (e) {
+    console.error('获取模型列表失败', e);
+  }
+
+  // 如果没有找到模型，提供一个默认的占位符
+  if (availableModels.length === 0) {
+    availableModels.push({ label: 'mobilenet_v2', value: 'mobilenet_v2' });
+  }
+
   return {
     pluginInfo: {
       name: 'nsfwjs-plugin',
@@ -44,6 +67,24 @@ export function supportGuoba() {
           label: "主动审核开关",
           bottomHelpMessage: "主动审核开关",
           component: "Switch",
+        },
+        {
+          component: "Divider",
+          label: "模型 相关配置",
+          componentProps: {
+            orientation: "left",
+            plain: true,
+          },
+        },
+        {
+          field: "model_name",
+          label: "识别模型",
+          bottomHelpMessage: "选择用于图像分类的模型（仅显示 resources/models 下已放置的模型）",
+          component: "Select",
+          componentProps: {
+            options: availableModels,
+            placeholder: '请选择识别模型',
+          },
         },
         {
           component: "Divider",
@@ -236,11 +277,22 @@ export function supportGuoba() {
           lodash.set(config, keyPath, value)
         }
         config = lodash.merge({}, Config.getConfig(), config)
-        config.notice_user = data['notice_user'].map(ele => isNaN(ele) ? ele : Number(ele))
-        config.white_user_list = data['white_user_list'].map(ele => isNaN(ele) ? ele : Number(ele))
-        config.black_user_list = data['black_user_list'].map(ele => isNaN(ele) ? ele : Number(ele))
-        config.white_group_list = data['white_group_list'].map(ele => isNaN(ele) ? ele : Number(ele))
-        config.black_group_list = data['black_group_list'].map(ele => isNaN(ele) ? ele : Number(ele))
+        config.notice_user = (data['notice_user'] || []).map(ele => isNaN(ele) ? ele : Number(ele))
+        config.white_user_list = (data['white_user_list'] || []).map(ele => isNaN(ele) ? ele : Number(ele))
+        config.black_user_list = (data['black_user_list'] || []).map(ele => isNaN(ele) ? ele : Number(ele))
+        config.white_group_list = (data['white_group_list'] || []).map(ele => isNaN(ele) ? ele : Number(ele))
+        config.black_group_list = (data['black_group_list'] || []).map(ele => isNaN(ele) ? ele : Number(ele))
+        
+        // 当模型更改时，清空当前内存中的模型以便下次调用重新加载
+        if (config.model_name && config.model_name !== Config.getConfig().model_name) {
+          try {
+            const NSFWService = import('./components/nsfwjs/nsfwjs.js').then(module => {
+              module.default.model = null
+              module.default.isInitialized = false
+            }).catch(() => {})
+          } catch (e) {}
+        }
+        
         Config.setConfig(config)
         return Result.ok({}, '保存成功~')
       },

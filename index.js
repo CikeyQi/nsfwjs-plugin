@@ -1,36 +1,32 @@
-import fs from 'node:fs';
+import fs from 'node:fs'
 
 if (!global.segment) {
-  global.segment = (await import("oicq")).segment;
+  global.segment = (await import('oicq')).segment
 }
 
-let ret = [];
-
-logger.info(logger.yellow("- 正在载入 NSFWJS-PLUGIN"));
+logger.info(logger.yellow('- 正在载入 NSFWJS-PLUGIN'))
 
 const files = fs
   .readdirSync('./plugins/nsfwjs-plugin/apps')
-  .filter((file) => file.endsWith('.js'));
+  .filter((file) => file.endsWith('.js'))
 
-files.forEach((file) => {
-  ret.push(import(`./apps/${file}`))
+const ret = await Promise.allSettled(
+  files.map((file) => import(`./apps/${file}`))
+)
+
+const apps = {}
+files.forEach((file, index) => {
+  const name = file.replace('.js', '')
+
+  if (ret[index].status !== 'fulfilled') {
+    logger.error(`载入插件错误：${logger.red(name)}`)
+    logger.error(ret[index].reason)
+    return
+  }
+  apps[name] = ret[index].value[Object.keys(ret[index].value)[0]]
 })
 
-ret = await Promise.allSettled(ret);
+logger.info(logger.green('- NSFWJS-PLUGIN 载入成功'))
+logger.info(logger.magenta('- 欢迎加入新组织【貓娘樂園🍥🏳️‍⚧️】（群号 707331865）'))
 
-let apps = {};
-for (let i in files) {
-  let name = files[i].replace('.js', '');
-
-  if (ret[i].status !== 'fulfilled') {
-    logger.error(`载入插件错误：${logger.red(name)}`);
-    logger.error(ret[i].reason);
-    continue;
-  }
-  apps[name] = ret[i].value[Object.keys(ret[i].value)[0]];
-}
-
-logger.info(logger.green("- NSFWJS-PLUGIN 载入成功"));
-logger.info(logger.magenta(`- 欢迎加入新组织【貓娘樂園🍥🏳️‍⚧️】（群号 707331865）`));
-
-export { apps };
+export { apps }

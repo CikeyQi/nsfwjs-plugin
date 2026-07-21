@@ -13,3 +13,4 @@ black_user_list: []
 white_group_list: []
 black_group_list: []
 save_path: /picture/{group_id}/{user_id}/{time}.jpg
+model_name: mobilenet_v2

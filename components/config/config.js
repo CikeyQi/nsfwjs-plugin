@@ -4,103 +4,128 @@ import { pluginRoot } from '../../model/path.js'
 import Log from '../../utils/logs.js'
 
 class Config {
-  getConfig() {
+  constructor() {
+    this.config = null
+    this.policy = null
+    this.history = null
+    
+    // Config paths
+    this.configPath = `${pluginRoot}/config/config/config.yaml`
+    this.defConfigPath = `${pluginRoot}/config/config_default.yaml`
+    this.policyPath = `${pluginRoot}/config/config/policy.yaml`
+    this.defPolicyPath = `${pluginRoot}/config/policy_default.yaml`
+    this.historyPath = `${pluginRoot}/resources/history/history.yaml`
+    
+    this.watchConfig()
+  }
+
+  /**
+   * 监听配置文件变动
+   */
+  watchConfig() {
+    const watchFile = (filePath, callback) => {
+      if (fs.existsSync(filePath)) {
+        fs.watch(filePath, (event) => {
+          if (event === 'change') {
+            callback()
+          }
+        })
+      }
+    }
+    
+    watchFile(this.configPath, () => {
+      Log.i('检测到 config.yaml 变动，重新加载配置')
+      this.config = null
+    })
+    
+    watchFile(this.policyPath, () => {
+      Log.i('检测到 policy.yaml 变动，重新加载策略')
+      this.policy = null
+    })
+    
+    watchFile(this.historyPath, () => {
+      Log.i('检测到 history.yaml 变动，重新加载历史记录')
+      this.history = null
+    })
+  }
+
+  /**
+   * 读取通用 YAML
+   */
+  _readYaml(filePath) {
     try {
-      const config_data = YAML.parse(
-        fs.readFileSync(`${pluginRoot}/config/config/config.yaml`, 'utf-8')
-      )
-      return config_data
+      if (!fs.existsSync(filePath)) return null
+      return YAML.parse(fs.readFileSync(filePath, 'utf-8'))
     } catch (err) {
-      Log.e('读取config.yaml失败', err)
+      Log.e(`读取 YAML 文件失败: ${filePath}`, err)
+      return null
+    }
+  }
+  
+  /**
+   * 写入通用 YAML
+   */
+  _writeYaml(filePath, data) {
+    try {
+      fs.writeFileSync(filePath, YAML.stringify(data))
+      return true
+    } catch (err) {
+      Log.e(`写入 YAML 文件失败: ${filePath}`, err)
       return false
     }
+  }
+
+  getConfig() {
+    if (!this.config) {
+      this.config = this._readYaml(this.configPath) || this.getDefConfig()
+    }
+    return this.config
   }
 
   getDefConfig() {
-    try {
-      const config_default_data = YAML.parse(
-        fs.readFileSync(`${pluginRoot}/config/config_default.yaml`, 'utf-8')
-      )
-      return config_default_data
-    } catch (err) {
-      Log.e('读取config_default.yaml失败', err)
-      return false
-    }
+    return this._readYaml(this.defConfigPath) || {}
   }
 
   setConfig(config_data) {
-    try {
-      fs.writeFileSync(
-        `${pluginRoot}/config/config/config.yaml`,
-        YAML.stringify(config_data),
-      )
+    if (this._writeYaml(this.configPath, config_data)) {
+      this.config = config_data
       return true
-    } catch (err) {
-      Log.e('写入config.yaml失败', err)
-      return false
     }
+    return false
   }
 
   getPolicy() {
-    try {
-      const policy_data = YAML.parse(
-        fs.readFileSync(`${pluginRoot}/config/config/policy.yaml`, 'utf-8')
-      )
-      return policy_data
-    } catch (err) {
-      Log.e('读取policy.yaml失败', err)
-      return false
+    if (!this.policy) {
+      this.policy = this._readYaml(this.policyPath) || this.getDefPolicy()
     }
+    return this.policy
   }
 
   getDefPolicy() {
-    try {
-      const policy_default_data = YAML.parse(
-        fs.readFileSync(`${pluginRoot}/config/policy_default.yaml`, 'utf-8')
-      )
-      return policy_default_data
-    } catch (err) {
-      Log.e('读取policy_default.yaml失败', err)
-      return false
-    }
+    return this._readYaml(this.defPolicyPath) || {}
   }
 
   setPolicy(policy_data) {
-    try {
-      fs.writeFileSync(
-        `${pluginRoot}/config/config/policy.yaml`,
-        YAML.stringify(policy_data),
-      )
+    if (this._writeYaml(this.policyPath, policy_data)) {
+      this.policy = policy_data
       return true
-    } catch (err) {
-      Log.e('写入policy.yaml失败', err)
-      return false
     }
+    return false
   }
 
   getHistory() {
-    try {
-      const history_data = YAML.parse(
-        fs.readFileSync(`${pluginRoot}/resources/history/history.yaml`, 'utf-8')
-      )
-      return history_data
-    } catch (err) {
-      Log.e('读取history.yaml失败', err)
-      return false
+    if (!this.history) {
+      this.history = this._readYaml(this.historyPath) || { white_pic_md5: [] }
     }
+    return this.history
   }
 
   setHistory(history_data) {
-    try {
-      fs.writeFileSync(
-        `${pluginRoot}/resources/history/history.yaml`,
-        YAML.stringify(history_data),
-      )
+    if (this._writeYaml(this.historyPath, history_data)) {
+      this.history = history_data
       return true
-    } catch (err) {
-      Log.e('写入history.yaml失败', err)
-      return false
     }
+    return false
   }
 }
 

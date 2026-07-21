@@ -9,10 +9,11 @@
   "type": "module",
   "module": "index.js",
   "dependencies": {
-    "nsfwjs": "2.4.2",
-    "@tensorflow/tfjs-node": "3.18.0",
-    "@tensorflow/tfjs": "3.18.0",
-    "axios": "1.13.5"
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-backend-wasm": "^4.22.0",
+    "axios": "^1.18.1",
+    "nsfwjs": "^4.3.0",
+    "sharp": "^0.32.6"
   },
   "keywords": [
     "Yunzai-Bot",
