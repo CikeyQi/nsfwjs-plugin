@@ -1,4 +1,3 @@
-import axios from 'axios'
 import Log from './logs.js'
 
 /**
@@ -9,16 +8,23 @@ import Log from './logs.js'
  */
 export async function downloadImage(url, timeout = 10000) {
   try {
-    const response = await axios.get(url, {
-      responseType: 'arraybuffer',
-      timeout
-    })
-    
-    const contentType = response.headers['content-type'] || ''
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), timeout)
+
+    const response = await fetch(url, { signal: controller.signal })
+    clearTimeout(timer)
+
+    if (!response.ok) {
+      Log.e(`下载图片失败: ${url}`, `HTTP Status ${response.status}`)
+      return null
+    }
+
+    const contentType = response.headers.get('content-type') || ''
     const isGif = contentType.includes('image/gif')
-    
+    const arrayBuffer = await response.arrayBuffer()
+
     return {
-      data: response.data,
+      data: Buffer.from(arrayBuffer),
       isGif
     }
   } catch (error) {

@@ -1,7 +1,7 @@
 import * as nsfw from 'nsfwjs'
 import * as tf from '@tensorflow/tfjs'
 import { setWasmPaths } from '@tensorflow/tfjs-backend-wasm'
-import sharp from 'sharp'
+import Jimp from 'jimp'
 import { pluginResources } from '../../model/path.js'
 import fs from 'fs/promises'
 import path from 'path'
@@ -98,12 +98,19 @@ class NSFWService {
    * 图像预处理
    */
   async preprocessImage(buffer) {
-    const { data, info } = await sharp(buffer)
-      .removeAlpha()
-      .raw()
-      .toBuffer({ resolveWithObject: true })
+    const image = await Jimp.read(buffer)
+    const width = image.bitmap.width
+    const height = image.bitmap.height
+    const rgbaData = image.bitmap.data
 
-    return tf.tensor3d(new Uint8Array(data), [info.height, info.width, 3], 'int32')
+    const rgbData = new Uint8Array(width * height * 3)
+    for (let i = 0, j = 0; i < rgbaData.length; i += 4, j += 3) {
+      rgbData[j] = rgbaData[i]         // R
+      rgbData[j + 1] = rgbaData[i + 1] // G
+      rgbData[j + 2] = rgbaData[i + 2] // B
+    }
+
+    return tf.tensor3d(rgbData, [height, width, 3], 'int32')
   }
 
   /**
